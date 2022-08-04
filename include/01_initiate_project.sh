@@ -1,16 +1,20 @@
-git init
-git remote add origin git@github.com:Yanina-Kutovaya/credit-cards-project.git
-git branch -M main
-git push -uf origin main
-
 kedro new
-cp -r credit-cards-project/* .
-rm -r credit-cards-project
+git init
+git add .
+git commit -m 'Initial commit'
+
+git remote add origin git@github.com:Yanina-Kutovaya/credit-cards-fraud-detection.git 
+git branch main
+git checkout main
+git merge master
+git branch -D master
+
+git push -uf origin main
 
 pip install dvc[all]
 dvc init
 git commit -m "Initialize DVC"
-dvc remote add -d s3store s3://credit-cards-data/01_raw
+dvc remote add -d s3store s3://credit-cards-data/dvc
 dvc remote modify s3store endpointurl https://storage.yandexcloud.net
 
 git rm -r --cached 'data'
