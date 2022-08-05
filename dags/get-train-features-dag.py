@@ -2,30 +2,29 @@ from airflow import DAG
 from airflow.operators.bash import BashOperator
 from airflow.providers.apache.spark.operators.spark_submit import SparkSubmitOperator 
 from datetime import datetime, timedelta
+
  
 default_args = {
     'owner': 'airflow',    
     #'start_date': airflow.utils.dates.days_ago(2),
-    # 'end_date': datetime(),
-    # 'depends_on_past': False,
-    # 'email': ['airflow@example.com'],
-    # 'email_on_failure': False,
-    # 'email_on_retry': False,
-    # If a task fails, retry it once after waiting
-    # at least 5 minutes
+    #'end_date': datetime(),
+    #'depends_on_past': False,
+    #'email': ['airflow@example.com'],
+    #'email_on_failure': False,
+    #'email_on_retry': False,
+    # If a task fails, retry it once after waiting at least 5 minutes
     #'retries': 1,
-    'retry_delay': timedelta(minutes=5),
-}
-
+    'retry_delay': timedelta(minutes=5)
+    }
 dag = DAG(
     dag_id = 'get_train_features_dag',    
     default_args=default_args,
     start_date=datetime(2022, 8, 1),
     # schedule_interval='0 0 * * *',
     schedule_interval='@once',
-    description='Generate feature_extraction_pipeline and train_features',    
+    description='Generate feature_extraction_pipeline and train_features',
     template_searchpath='/opt/scripts'
-)
+    )
 print('Generate feature_extraction_pipeline_model and train_features and save them in hdfs')
 generate_model_and_train_features = SparkSubmitOperator(
     task_id='generate_model_and_train_features',
