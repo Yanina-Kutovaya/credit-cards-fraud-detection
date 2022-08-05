@@ -6,7 +6,7 @@ from pyspark.sql import SQLContext
 from scripts.feature_extraction_pipeline_v1 import get_feature_extraction_pipeline
  
 def main():
-    conf = SparkConf().setAppName('app_name')
+    conf = SparkConf().setAppName(app_name)
     conf.set("fs.s3a.aws.credentials.provider", "org.apache.hadoop.fs.s3a.AnonymousAWSCredentialsProvider")
     sc = SparkContext(conf=conf)
  
