@@ -39,14 +39,14 @@ print('Save feature_extraction_pipeline_model_v1 to object storage')
 save_model_to_object_storage = BashOperator(
     task_id='save_model_to_object_storage',
     bash_command='aws --endpoint-url=https://storage.yandexcloud.net s3 cp --recursive \
-        feature_extraction_pipeline_model_v1 s3://credit-cards-data/feature_extraction_pipeline_model_v1/',
+        feature_extraction_pipeline_model_v1 s3://credit-cards-data/feature_extraction_pipeline_model_v1/ ',
     dag=dag    
     )
 print('Save train_features to object storage')
 save_train_features_to_object_storage = BashOperator(
     task_id='save_train_features_to_object_storage',
     bash_command='aws --endpoint-url=https://storage.yandexcloud.net s3 cp --recursive \
-        train_features.parquet s3://credit-cards-data/train_features.parquet',
+        train_features.parquet s3://credit-cards-data/train_features.parquet ',
     dag=dag    
     )
 generate_model_and_train_features >> copy_model_to_local >> save_model_to_object_storage

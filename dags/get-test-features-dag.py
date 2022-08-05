@@ -27,9 +27,8 @@ print('Save test_features to object storage')
 save_test_features_to_object_storage = BashOperator(
     task_id='save_test_features_to_object_storage',
     bash_command = 'aws --endpoint-url=https://storage.yandexcloud.net s3 cp --recursive \
-        test_features.parquet s3://credit-cards-data/test_features.parquet',
+        test_features.parquet s3://credit-cards-data/test_features.parquet ',
     dag=dag
     )
 generate_test_features >> copy_test_features_to_local >> save_test_features_to_object_storage
-
 
