@@ -11,9 +11,11 @@ def main():
     sc = SparkContext(conf=conf)
  
     sql = SQLContext(sc)
-    df_train = sql.read.parquet('s3a://credit-cards-data/train.parquet')
+    df_train = sql.read.parquet('s3a://credit-cards-data/train.parquet')    
     defaultFS = sc._jsc.hadoopConfiguration().get('fs.defaultFS')
 
+
+    df_train = df_train.repartition(8)
     feature_extraction_pipeline = get_feature_extraction_pipeline()
     feature_extraction_pipeline_model = feature_extraction_pipeline.fit(df_train)
     df_train = feature_extraction_pipeline_model.transform(df_train)
