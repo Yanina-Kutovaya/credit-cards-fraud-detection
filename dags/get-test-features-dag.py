@@ -7,14 +7,12 @@ from datetime import datetime, timedelta
 dag = DAG(
     dag_id = 'get_test_features_dag',
     start_date=datetime(2022, 8, 1),
-    schedule_interval='@daily',
-    template_searchpath='/opt/dags/scripts/'
+    schedule_interval='@daily',    
     )
 print('Generate test_features and save them in hdfs')
 generate_test_features = SparkSubmitOperator(
     task_id='generate_test_features',
-    application = 'generate_test_features.py',
-    #conn_id = 'spark_local', 
+    application = 'airflow/dags/scripts/generate_test_features.py',
     dag=dag
     ) 
 print('Copy test_features from hdfs to local')

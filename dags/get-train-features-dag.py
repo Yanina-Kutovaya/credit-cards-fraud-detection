@@ -13,14 +13,12 @@ dag = DAG(
     default_args=default_args,
     start_date=datetime(2022, 8, 1),    
     schedule_interval='@once',
-    description='Generate feature_extraction_pipeline and train_features',
-    template_searchpath=' /opt/dags/scripts/'    
+    description='Generate feature_extraction_pipeline and train_features',       
     )
 print('Generate feature_extraction_pipeline_model and train_features and save them in hdfs')
 generate_model_and_train_features = SparkSubmitOperator(
     task_id='generate_model_and_train_features',
-    application = 'generate_train_features.py',
-    #conn_id = 'spark_local', 
+    application = 'airflow/dags/scripts/generate_train_features.py',    
     dag=dag
     )
 print('Copy feature_extraction_pipeline_model_v1 from hdfs to local')
