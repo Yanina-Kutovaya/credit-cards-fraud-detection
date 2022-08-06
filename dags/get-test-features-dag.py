@@ -8,7 +8,7 @@ dag = DAG(
     dag_id = 'get_test_features_dag',
     start_date=datetime(2022, 8, 1),
     schedule_interval='@daily',
-    template_searchpath='/opt/airflow/dags/scripts/'
+    template_searchpath='/home/ubuntu/airflow/dags/scripts/'
     )
 print('Generate test_features and save them in hdfs')
 generate_test_features = SparkSubmitOperator(
