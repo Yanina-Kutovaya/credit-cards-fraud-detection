@@ -3,22 +3,13 @@ S3 Sensor Connection Test
 """
 
 from airflow import DAG
-from airflow.operators import (
-    SimpleHttpOperator, 
-    HttpSensor,   
-    BashOperator, 
-    EmailOperator, 
-    S3KeySensor
-    )
+from airflow.operators.bash import BashOperator
+from airflow.providers.amazon.aws.sensors.S3 import S3KeySensor
 from datetime import datetime, timedelta
 
 default_args = {
     'owner': 'airflow',
-    'depends_on_past': False,
     'start_date': datetime(2022, 8, 6),
-    'email': ['something@here.com'],
-    'email_on_failure': False,
-    'email_on_retry': False,
     'retries': 5,
     'retry_delay': timedelta(minutes=5)
 }
