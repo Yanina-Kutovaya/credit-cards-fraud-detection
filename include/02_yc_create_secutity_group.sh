@@ -1,4 +1,4 @@
-yc vpc security-group create --name sg-cli \
+yc vpc security-group create --name sg-cc-project \
 --description 'Data Proc security group' \
 --network-id enph7vn3ackplrl3v6qj \
 --rule description='output',direction=EGRESS,from-port=0,to-port=65535,protocol=ANY,predefined=self_security_group \
@@ -8,4 +8,5 @@ yc vpc security-group create --name sg-cli \
 --rule description='SSH',direction=INGRESS,port=22,protocol=tcp,v4-cidrs=[0.0.0.0/0] \
 --rule description='HTTPS',direction=INGRESS,port=443,protocol=tcp,v4-cidrs=[0.0.0.0/0] \
 --rule description='Spark Web UI',direction=INGRESS,from-port=4040,to-port=4050,protocol=ANY,v4-cidrs=[0.0.0.0/0] \
---rule description='Jupyter',direction=INGRESS,port=8888,protocol=ANY,v4-cidrs=[0.0.0.0/0]
+--rule description='Jupyter',direction=INGRESS,port=8888,protocol=ANY,v4-cidrs=[0.0.0.0/0] \
+--rule description='SSH',direction=INGRESS,port=80,protocol=tcp,v4-cidrs=[0.0.0.0/0]
