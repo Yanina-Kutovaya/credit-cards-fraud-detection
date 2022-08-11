@@ -10,11 +10,11 @@ from airflow.providers.yandex.operators.yandexcloud_dataproc import (
     DataprocDeleteClusterOperator
 )
 
-YC_DP_FOLDER_ID = 'sd123... ' # YC catalog to create cluster
+YC_DP_FOLDER_ID = 'b1gnvl119oudpdqs9nr2' # YC catalog to create cluster
 YC_DP_CLUSTER_NAME = f'tmp-dp-{uuid.uuid4()}' # Name for temporary DP cluster
 YC_DP_CLUSTER_DESC = 'Temporary cluster for Spark processing under Airflow orcesration' # DP cluster description
-YC_DP_SUBNET_ID = 'dsa321...' # YC subnet to create cluster
-YC_DP_SA_ID = 'yt123...' # YC sevice account for Data Proc cluster
+YC_DP_SUBNET_ID = 'e9bpckbmt2sim9jnupht' # YC subnet to create cluster
+YC_DP_SA_ID = 'aje2hg524orhj5bsufro' # YC sevice account for Data Proc cluster
 
 YC_INPUT_DATA_BUCKET = 'airflow-cc-input' # S3 bucket for input data
 YC_SOURCE_BUCKET = 'airflow-cc-source' # S3 bucket for pyspark source files
@@ -60,8 +60,8 @@ with DAG(
         propeties={# But pointing it to remote Metastore cluster
         # Pre-created persistent light cluster with HDFS, HIVE, MAPREDUCE, YARN
         # from MASTERNODE and DATANODE
-        'spark:spark.hive.matastore.urls:': 'thrift://rc1a-dataproc-m-784a5wcybgs11bag.mdb.yandecloud.net:9083',
-        'spark:spark.hive.matastore.warehose.dir:':'s3a://dataproc-1535/metastore/',
+        'spark:spark.hive.matastore.urls:': 'thrift://rc1a-dataproc-m-zqbxjx006jc7qwiq.mdb.yandexcloud.net:9083',
+        'spark:spark.hive.matastore.warehose.dir:': 's3a://dataproc-1/metastore/',
         },
         connection_id='yc-airflow-sa',
         dag=ingest_dag
