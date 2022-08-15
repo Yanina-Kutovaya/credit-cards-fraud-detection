@@ -57,7 +57,7 @@ with DAG(
         computenode_max_hosts_count=5,
         services=['YARN', 'SPARK'], # Creating lightweight Spark cluster
         datanode_count=0, # With no data nodes
-        propeties={# But pointing it to remote Metastore cluster
+        properties={# But pointing it to remote Metastore cluster
         # Pre-created persistent light cluster with HDFS, HIVE, MAPREDUCE, YARN
         # from MASTERNODE and DATANODE
         'spark:spark.hive.matastore.urls:': 'thrift://rc1a-dataproc-m-zqbxjx006jc7qwiq.mdb.yandexcloud.net:9083',
