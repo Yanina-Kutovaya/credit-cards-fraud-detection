@@ -49,7 +49,7 @@ with DAG(
         zone='ru-central1-a',
         service_account_id=YC_DP_SA_ID,
         cluster_image_version='2.0.43',
-        enable_ui_proxi=False,
+        enable_ui_proxy=False,
         masternode_resource_preset='s2.small',
         masternode_disk_type='network-ssd',
         computenode_disk_size=200,
