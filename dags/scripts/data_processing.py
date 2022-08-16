@@ -8,7 +8,7 @@ spark = SparkSession.builder.enableHiveSupport().getOrCreate()
 data = spark.read.format('csv')\
     .option('headers', True)\
     .option('delimiter', ',')\
-    .load(f's3://{YC_INPUT_DATA_BUCKET}/sensors_data_part_0000*.csv')
+    .load(f's3a://{YC_INPUT_DATA_BUCKET}/sensors-data-part-0000*.csv')
 
 ## ignore - 'black list' (items to be excluded)
 # ignore = spark.sql(sqlQuery='select device_id from ignore')
@@ -16,4 +16,4 @@ data = spark.read.format('csv')\
 
 data.repartition(1)\
     .write.format('parquet')\
-    .save(f's3//{YC_OUTPUT_DATA_BUCKET}/sensors')
+    .save(f's3a//{YC_OUTPUT_DATA_BUCKET}/sensors')
