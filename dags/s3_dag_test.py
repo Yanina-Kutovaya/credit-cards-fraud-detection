@@ -23,10 +23,10 @@ t1 = BashOperator(
 
 sensor = S3KeySensor(
     task_id='check_s3_for_file_in_s3',
-    bucket_key='test.parquet',
+    bucket_key='test.csv',
     wildcard_match=True,
-    bucket_name='credit-cards-data',
-    s3_conn_id='my_conn_S3',
+    bucket_name='airflow-cc-input',
+    s3_conn_id='s3_conn',
     timeout=18*60*60,
     poke_interval=120,
     dag=dag)
