@@ -60,7 +60,7 @@ with DAG(
         properties={# But pointing it to remote Metastore cluster
         # Pre-created persistent light cluster with HDFS, HIVE, MAPREDUCE, YARN
         # from MASTERNODE and DATANODE
-        'spark:spark.hive.matastore.urls:': 'thrift://rc1a-dataproc-m-zqbxjx006jc7qwiq.mdb.yandexcloud.net:9083',
+        'spark:spark.hive.matastore.uris:': 'thrift://rc1a-dataproc-m-zqbxjx006jc7qwiq.mdb.yandexcloud.net:9083',
         'spark:spark.hive.matastore.warehose.dir:': 's3a://dataproc-1/metastore/',
         },
         connection_id='yc-airflow-sa',
