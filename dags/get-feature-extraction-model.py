@@ -1,7 +1,7 @@
 MODEL = 'feature_extraction_pipeline_model'
 YC_S3 = 'aws s3 --endpoint-url=https://storage.yandexcloud.net'
 YC_INPUT_DATA_BUCKET = 'airflow-cc-input'   # S3 bucket for input data
-YC_OUTPUT_DATA_BUCKET = 'airflow-cc-output' # S3 bucket for input data
+YC_OUTPUT_DATA_BUCKET = 'airflow-cc-output' # S3 bucket for output data
 YC_SOURCE_BUCKET = 'airflow-cc-source'      # S3 bucket for pyspark source files
 
 from airflow import DAG
