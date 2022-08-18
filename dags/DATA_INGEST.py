@@ -69,7 +69,7 @@ with DAG(
 
     poke_spark_processing = DataprocCreatePysparkJobOperator(
         task_id='dp-cluster-pyspark-task',
-        main_python_file_url=f's3a://{YC_SOURCE_BUCKET}/data_processing.py',
+        main_python_file_uri=f's3a://{YC_SOURCE_BUCKET}/data_processing.py',
         connection_id='yc-airflow-sa',
         dag=ingest_dag
     )
