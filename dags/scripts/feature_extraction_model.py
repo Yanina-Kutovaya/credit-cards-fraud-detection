@@ -15,9 +15,11 @@ def main():
         .enableHiveSupport()
         .getOrCreate()
     )
-    spark.sparkContext.addFile(TRAIN_DATA_URL)
-    df_train = spark.read.parquet(
-        SparkFiles.get('train.parquet'), header=True, inferSchema=True
+    df_train = (
+         spark.read.format('csv')
+        .option('headers', True)
+        .option('delimiter', ',')
+        .load('train.csv')
     )
     df_train = df_train.repartition(4)
 
