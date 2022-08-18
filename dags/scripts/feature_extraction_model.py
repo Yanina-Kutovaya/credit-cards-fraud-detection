@@ -1,7 +1,6 @@
 APP_NAME = 'Feature extraction pipeline model'
 YC_INPUT_DATA_BUCKET = 'airflow-cc-input'   # S3 bucket for input data
 YC_SOURCE_BUCKET = 'airflow-cc-source'      # S3 bucket for pyspark source files
-TRAIN_DATA_URL = 'https://storage.yandexcloud.net/credit-cards-data/train.parquet'
 
 from pyspark.sql import SparkSession
 from pyspark import SparkFiles
