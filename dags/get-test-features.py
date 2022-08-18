@@ -14,21 +14,11 @@ dag = DAG(
     dag_id = 'get_test_features_dag',
     start_date=datetime(2022, 8, 15),
     schedule_interval='@daily',
-    description='Generate test_features from feature_extraction_pipeline_model and test.csv'    
-)
-copy_test_from_s3 = BashOperator(
-    task_id='copy_test_from_s3',
-    bash_command=f'{YC_S3} cp s3://{YC_INPUT_DATA_BUCKET}/test.csv .  ',
-    dag=dag    
+    description='Generate test_features from feature_extraction_pipeline_model and test.parquet'    
 )
 copy_model_from_s3 = BashOperator(
     task_id='copy_model_from_s3',
     bash_command=f'{YC_S3} cp s3://{YC_OUTPUT_DATA_BUCKET}/{MODEL} .  ',
-    dag=dag    
-)
-put_test_to_hdfs = BashOperator(
-    task_id='put_test_to_hdfs',
-    bash_command='hdfs dfs -put test.csv ',
     dag=dag    
 )
 put_model_to_hdfs = BashOperator(
@@ -52,6 +42,5 @@ save_test_features_to_s3 = BashOperator(
         s3://{YC_OUTPUT_DATA_BUCKET}/test_features.parquet ',
     dag=dag
 )
-copy_test_from_s3 >> put_test_to_hdfs >> generate_test_features 
 copy_model_from_s3 >> put_model_to_hdfs >> generate_test_features 
 generate_test_features >> copy_test_features_to_local >> save_test_features_to_s3
