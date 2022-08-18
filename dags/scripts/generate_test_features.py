@@ -1,5 +1,5 @@
 APP_NAME = 'Test data preprocessing'
-YC_INPUT_DATA_BUCKET = 'credit-cards-data'   # S3 bucket for input data
+YC_INPUT_DATA_BUCKET = 'airflow-cc-input'   # S3 bucket for input data
 
 import sys 
 from pyspark import SparkContext, SparkConf
