@@ -1,25 +1,28 @@
 APP_NAME = 'Test data preprocessing'
-YC_INPUT_DATA_BUCKET = 'airflow-cc-input'   # S3 bucket for input data
-YC_SOURCE_BUCKET = 'airflow-cc-source'      # S3 bucket for pyspark source files
+YC_INPUT_DATA_BUCKET = 'credit-cards-data'   # S3 bucket for input data
 
-from pyspark.sql import SparkSession
-from custom_transformers import *
+import sys 
+from pyspark import SparkContext, SparkConf
+from pyspark.sql import SQLContext
+from custom_transformers import (
+    DiscreteToBinaryTransformer,
+    ContinuousOutliersCapper,
+    TimeFeaturesGenerator,
+    ScalarNAFiller,
+    StringFromDiscrete
+)
 from pyspark.ml import PipelineModel
 
 
 def main():
-    spark = (
-        SparkSession.builder
-        .appName(APP_NAME)
-        .enableHiveSupport()
-        .getOrCreate()
-    )
-    df_test = (
-        spark.read.format('csv')
-        .option('headers', True)
-        .option('delimiter', ',')
-        .load('test.csv')
-    )
+    conf = SparkConf().setAppName(APP_NAME)
+    conf.set("fs.s3a.aws.credentials.provider", "org.apache.hadoop.fs.s3a.AnonymousAWSCredentialsProvider")
+    sc = SparkContext(conf=conf)
+ 
+    sql = SQLContext(sc)    
+    df_test = sql.read.parquet(f's3a://{YC_INPUT_DATA_BUCKET}/test.parquet')
+    defaultFS = sc._jsc.hadoopConfiguration().get('fs.defaultFS')
+    
     df_test = df_test.repartition(4)
     feature_extraction_pipeline_model = PipelineModel.load('feature_extraction_pipeline_model')
     df_test = feature_extraction_pipeline_model.transform(df_test)
