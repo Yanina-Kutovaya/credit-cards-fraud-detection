@@ -16,6 +16,11 @@ dag = DAG(
     schedule_interval='@daily',
     description='Generate test_features from feature_extraction_pipeline_model and test.parquet'    
 )
+get_model_from_s3 = BashOperator(
+    task_id='get_model_from_s3',
+    bash_command = f'{YC_S3} cp s3://{YC_OUTPUT_DATA_BUCKET}/{MODEL} . ',
+    dag=dag 
+)
 generate_test_features = SparkSubmitOperator(
     task_id='generate_test_features',
     application = '/home/ubuntu/airflow/dags/scripts/generate_test_features_1.py',
