@@ -43,7 +43,7 @@ copy_test_features_to_local = BashOperator(
 )
 save_test_features_to_s3 = BashOperator(
     task_id='save_test_features_to_s3',
-    bash_command = f'{YC_S3} s3 cp --recursive /home/ubuntu/test_features.parquet \
+    bash_command = f'{YC_S3} cp --recursive /home/ubuntu/test_features.parquet \
         s3://{YC_OUTPUT_DATA_BUCKET}/test_features.parquet ',
     dag=dag
 )
