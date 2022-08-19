@@ -11,7 +11,7 @@ from datetime import datetime, timedelta
 
  
 dag = DAG(
-    dag_id = 'get_test_features_dag',
+    dag_id = 'get_test_features',
     start_date=datetime(2022, 8, 15),
     schedule_interval='@daily',
     description='Generate test_features from feature_extraction_pipeline_model and test.parquet'    
