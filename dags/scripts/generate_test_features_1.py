@@ -15,10 +15,10 @@ from pyspark.ml import PipelineModel
 
 def main(): 
     spark = (
-    SparkSession.builder
-    .appName(APP_NAME)
-    .enableHiveSupport()
-    .getOrCreate()    
+        SparkSession.builder
+        .appName(APP_NAME)
+        .enableHiveSupport()
+        .getOrCreate()    
     )
     TEST_DATA_URL = f'https://storage.yandexcloud.net/{YC_INPUT_DATA_BUCKET}/test.csv'
 
