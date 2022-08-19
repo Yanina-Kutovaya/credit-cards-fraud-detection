@@ -26,7 +26,7 @@ copy_script_from_s3 = BashOperator(
 )
 generate_test_features = SparkSubmitOperator(
     task_id='generate_test_features',
-    application = '/home/ubuntu/airflow/dags/scripts/generate_test_features_1.py',
+    application = '/home/ubuntu/generate_test_features_1.py',
     dag=dag
 )
 copy_test_features_to_local = BashOperator(
