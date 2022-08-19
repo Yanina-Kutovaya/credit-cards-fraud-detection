@@ -1,5 +1,6 @@
 APP_NAME = 'Test data preprocessing'
 YC_INPUT_DATA_BUCKET = 'airflow-cc-input'   # S3 bucket for input data
+YC_OUTPUT_DATA_BUCKET = 'airflow-cc-output' # S3 bucket for output data
 
 import sys 
 from pyspark import SparkContext, SparkConf
@@ -24,7 +25,9 @@ def main():
     defaultFS = sc._jsc.hadoopConfiguration().get('fs.defaultFS')
     
     df_test = df_test.repartition(4)
-    feature_extraction_pipeline_model = PipelineModel.load('feature_extraction_pipeline_model')
+    feature_extraction_pipeline_model = PipelineModel.load(
+        f's3a://{YC_OUTPUT_DATA_BUCKET}/feature_extraction_pipeline_model'
+        )
     df_test = feature_extraction_pipeline_model.transform(df_test)
     df_test.repartition(1).write.format('parquet').save('test_features.parquet')
 
