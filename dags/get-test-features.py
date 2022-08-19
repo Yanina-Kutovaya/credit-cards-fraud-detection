@@ -23,7 +23,7 @@ copy_model_from_s3 = BashOperator(
 )
 unzip_model = BashOperator(
     task_id='copy_model_from_s3',
-    bash_command=f'!unzip /home/ubuntu/{MODEL}.zip  ',
+    bash_command=f'unzip /home/ubuntu/{MODEL}.zip  ',
     dag=dag    
 )
 put_model_to_hdfs = BashOperator(
