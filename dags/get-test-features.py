@@ -18,12 +18,17 @@ dag = DAG(
 )
 copy_model_from_s3 = BashOperator(
     task_id='copy_model_from_s3',
-    bash_command=f'{YC_S3} cp s3://{YC_OUTPUT_DATA_BUCKET}/{MODEL} .  ',
+    bash_command=f'{YC_S3} cp s3://{YC_OUTPUT_DATA_BUCKET}/{MODEL}.zip .  ',
+    dag=dag    
+)
+unzip_model = BashOperator(
+    task_id='copy_model_from_s3',
+    bash_command=f'!unip /home/ubuntu/{MODEL}.zip  ',
     dag=dag    
 )
 put_model_to_hdfs = BashOperator(
     task_id='put_model_to_hdfs',
-    bash_command=f'hdfs dfs -put {MODEL} ',
+    bash_command=f'hdfs dfs -put /home/ubuntu/{MODEL} ',
     dag=dag    
 )
 generate_test_features = SparkSubmitOperator(
@@ -38,9 +43,9 @@ copy_test_features_to_local = BashOperator(
 )
 save_test_features_to_s3 = BashOperator(
     task_id='save_test_features_to_s3',
-    bash_command = f'{YC_S3} s3 cp --recursive test_features.parquet \
+    bash_command = f'{YC_S3} s3 cp --recursive /home/ubuntu/test_features.parquet \
         s3://{YC_OUTPUT_DATA_BUCKET}/test_features.parquet ',
     dag=dag
 )
-copy_model_from_s3 >> put_model_to_hdfs >> generate_test_features 
+copy_model_from_s3 >> unzip_model >> put_model_to_hdfs >> generate_test_features 
 generate_test_features >> copy_test_features_to_local >> save_test_features_to_s3
