@@ -22,12 +22,11 @@ def main():
  
     sql = SQLContext(sc)    
     df_test = sql.read.parquet(f's3a://{YC_INPUT_DATA_BUCKET}/test.parquet')
-    defaultFS = sc._jsc.hadoopConfiguration().get('fs.defaultFS')
-    
     df_test = df_test.repartition(4)
+    
     feature_extraction_pipeline_model = PipelineModel.load(
         f's3a://{YC_OUTPUT_DATA_BUCKET}/feature_extraction_pipeline_model'
-        )
+    )
     df_test = feature_extraction_pipeline_model.transform(df_test)
     df_test.repartition(1).write.format('parquet').save('test_features.parquet')
 
