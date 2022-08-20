@@ -14,15 +14,9 @@ def main():
     spark = (
         SparkSession.builder
         .appName(APP_NAME)
-        .enableHiveSupport()
         .getOrCreate()
-    )
-    df_train = (
-         spark.read.format('csv')
-        .option('headers', True)
-        .option('delimiter', ',')
-        .load('train.csv')
-    )
+    )       
+    df_train = spark.read.parquet('train.parquet')
     df_train = df_train.repartition(4)
 
     feature_extraction_pipeline = get_feature_extraction_pipeline()
