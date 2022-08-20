@@ -1,10 +1,13 @@
 APP_NAME = 'Feature extraction pipeline model'
-YC_INPUT_DATA_BUCKET = 'airflow-cc-input'   # S3 bucket for input data
-YC_SOURCE_BUCKET = 'airflow-cc-source'      # S3 bucket for pyspark source files
 
 from pyspark.sql import SparkSession
-from pyspark import SparkFiles
-from custom_transformers import *
+from custom_transformers import (
+    DiscreteToBinaryTransformer,
+    ContinuousOutliersCapper,
+    TimeFeaturesGenerator,
+    ScalarNAFiller,
+    StringFromDiscrete
+)
 from feature_extraction_pipeline import get_feature_extraction_pipeline
 
 def main():
