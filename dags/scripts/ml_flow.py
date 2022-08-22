@@ -5,9 +5,10 @@ import logging
 import argparse
 from datetime import datetime
 from pyspark.sql import SparkSession
-from pyspark.ml.classification import GBTClassifier
 
 import mlflow
+from mlflow.tracking import MlflowClient
+
 from custom_transformers import (
     DiscreteToBinaryTransformer,
     ContinuousOutliersCapper,
@@ -15,7 +16,9 @@ from custom_transformers import (
     ScalarNAFiller,
     StringFromDiscrete
 )
-from feature_extraction_pipeline import get_feature_extraction_pipeline
+from fraud_detection_model_pipeline import get_fraud_detection_model_pipeline
+from pyspark.ml.evaluation import BinaryClassificationEvaluator
+
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)-15s %(message)s")
 logger = logging.getLogger()
@@ -24,19 +27,12 @@ def get_data_path(train_artifact_path):
     data_path = train_artifact_path
     return data_path
 
-
-def get_classifier():
-    classifier = GBTClassifier(
-        labelCol=TARGET_COLUMN[0], featuresCol='features', 
-      maxDepth=6, seed=42, minInstancesPerNode=15
-    )
-    return classifier
-
-
 def main(args):
+    # Create Spark Session
     logger.info('Creating Spark Session ...')
     spark = SparkSession.builder.appName(APP_NAME).getOrCreate()
   
+    # Load data
     logger.info('Loading data ...')
     train_artifact_name = args.train_artifact
     data_path = get_data_path(train_artifact_name)
@@ -45,18 +41,44 @@ def main(args):
         .option(header='true', inferSchema='true')
         .load(data_path)
     )
-    feature_extraction_pipeline = get_feature_extraction_pipeline()
-    train_data = feature_extraction_pipeline.transform(data)
-    classifier = get_classifier()
+    # Prepare MLflow experiment for logging
+    client = MlflowClient()
+    experiment = client.get_experiment_by_name('Spark_Experiment')
+    experiment_id = experiment.experiment_id
 
-    logger.info('Fitting the model ...')
-    model = classifier.fit(train_data)
+    # Set run_name for search in mlflow 
+    run_name = f'Fraud_detection_model_pipline {str(datetime.now())}' 
 
-    logger.info('Saving the model ...')
-    mlflow.spark.save_model(model, args.output_artifact)
+    with mlflow.start_run(run_name=run_name, experiment_id=experiment_id):
+        inf_pipline = get_fraud_detection_model_pipeline()
+
+        logger.info('Fitting new model / Inference pipline ...')
+        model = inf_pipline.fit(data)
+
+        logger.info('Scoring the model ...')
+        evaluator = BinaryClassificationEvaluator(
+            labelCol=TARGET_COLUMN[0],
+            rawPredictionCol="rawPrediction",
+            metricName="areaUnderROC"
+        )
+        predictions = model.transform(data)
+        roc_auc = evaluator.evaluate(predictions)
+
+        run_id = mlflow.active_run().info.run_id
+        logger.info(f'Logging metrics to MLflow run {run_id} ...')    
+        mlflow.log_metric('roc_auc', roc_auc)
+        logger.info(f'Model roc_auc: {roc_auc}')
+
+        logger.info('Saving the model ...')
+        mlflow.spark.save_model(model, args.output_artifact)
+
+        logger.info('Exporting / logging model ...')
+        mlflow.spark.log_model(model, args.output_artifact)
+
+        logger.info('Done')
 
     spark.stop()
-    
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
