@@ -44,24 +44,21 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description='Data Preprocessing'
     )
-    # For CLI use 's3a//airflow-cc-output/feature_extraction_pipeline_model'    
-    # or 'feature_extraction_pipeline_model'
+    # For CLI use 's3a//airflow-cc-output/feature_extraction_pipeline_model'
     parser.add_argument(
         '--model_artifact',
         type=str,
         help='Fully qualified name of feature extraction pipeline model artifact',        
         required=True
     )
-    # For CLI use 's3a://airflow-cc-input/test.parquet'
-    # or 'test.parquet'
+    # For CLI use 's3a://airflow-cc-input/test.parquet'    
     parser.add_argument(
         '--raw_data_artifact',
         type=str,
         help='Fully qualified name of artifact/dataset for preprocessing',        
         required=True
     )
-    # For CLI use 's3a://airflow-cc-output/test_features.parquet'
-    # or 'test_features.parquet'
+    # For CLI use 's3a://airflow-cc-output/test_features.parquet'    
     parser.add_argument(
         '--output_artifact',
         type=str,
