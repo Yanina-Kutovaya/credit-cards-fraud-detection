@@ -59,8 +59,11 @@ with DAG(
         task_id='generate_test_features',
         bash_command=(
             'spark-submit '
-            '/home/ubuntu/generate_test_features.py '            
-        )      
+            '/home/ubuntu/generate_test_features.py '
+            f'--model_artifact "{MODEL}" '
+            '--raw_data_artifact "test.parquet" '
+            '--output_artifact "test_features.parquet" '            
+        ),         
     )
     copy_test_features_to_local = BashOperator(
         task_id='copy_test_features_to_local',
