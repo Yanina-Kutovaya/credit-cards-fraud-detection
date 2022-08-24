@@ -15,9 +15,9 @@ from airflow.operators.bash import BashOperator
 with DAG(
     dag_id = 'ml_flow_dag',
     schedule_interval='@daily',
-    start_date=datetime(2022, 7, 15),
+    start_date=datetime(2022, 7, 15),  
     max_active_runs=1,
-    catchup=True
+    catchup=False     
     ) as ingest_dag:
 
     copy_data_from_s3 = BashOperator(
