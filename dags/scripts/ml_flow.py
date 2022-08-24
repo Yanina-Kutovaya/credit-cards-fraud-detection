@@ -3,7 +3,6 @@ YC_INPUT_DATA_BUCKET = 'airflow-cc-input'
 YC_OUTPUT_DATA_BUCKET = 'airflow-cc-output'
 YC_SOURCE_BUCKET = 'airflow-cc-source'
 
-import boto3
 import logging
 import argparse
 from datetime import datetime
