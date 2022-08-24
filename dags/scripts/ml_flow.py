@@ -28,28 +28,14 @@ from fraud_detection_model_pipeline import get_fraud_detection_model_pipeline
 logging.basicConfig(level=logging.INFO, format="%(asctime)-15s %(message)s")
 logger = logging.getLogger()
 
-def get_data_path(train_artifact_path):
-    session = boto3.session.Session()
-    s3 = session.client(
-        service_name='s3',
-        endpoint_url='https://storage.yandexcloud.net'
-    )
-    [bucket, data_path] = train_artifact_path.split('/')[2:]
-    get_object_response = s3.get_object(Bucket=bucket, Key=data_path)
-    object_s3 = get_object_response['Body'].read()
-    with open(data_path, 'wb') as f:
-        f.write(object_s3)  
-    return data_path
-
-
 def main(args):
     # Create Spark Session
     logger.info('Creating Spark Session ...')
     spark = SparkSession.builder.appName(APP_NAME).getOrCreate()
       
     # Load data
-    logger.info('Loading data ...')
-    data_path = get_data_path(args.train_artifact)
+    logger.info('Loading data ...')    
+    data_path = args.train_artifact
     data = spark.read.parquet(data_path, header=True, inferSchema=True) 
     
     # Prepare MLflow experiment for logging
