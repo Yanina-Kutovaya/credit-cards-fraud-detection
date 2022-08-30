@@ -1,7 +1,4 @@
 APP_NAME = 'Model Automated Retraining and Validation'
-YC_INPUT_DATA_BUCKET = 'airflow-cc-input'
-YC_OUTPUT_DATA_BUCKET = 'airflow-cc-output'
-YC_SOURCE_BUCKET = 'airflow-cc-source'
 
 import logging
 import argparse
@@ -11,7 +8,7 @@ import numpy as np
 from scipy.stats import norm, ttest_ind
 
 from pyspark.sql import SparkSession
-import pyspark.sql.functions as F
+from pyspark.sql import functions as F
 from pyspark.sql.types import DoubleType
 from pyspark.ml import Pipeline
 from pyspark.ml.classification import GBTClassifier
