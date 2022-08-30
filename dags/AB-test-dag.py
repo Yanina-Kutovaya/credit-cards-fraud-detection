@@ -14,7 +14,7 @@ from airflow.operators.bash import BashOperator
 
 
 with DAG(
-    dag_id = 'ml_flow_dag',
+    dag_id = 'AB_test_dag',
     schedule_interval='@daily',
     start_date=datetime(2022, 7, 15),  
     max_active_runs=1,
@@ -37,7 +37,7 @@ with DAG(
         task_id='copy_model_from_s3',
         bash_command=(
             f'{YC_S3} cp s3://{YC_OUTPUT_DATA_BUCKET}/{SAVED_ARTIFACT} '
-            '/home/ubuntu/train.parquet '
+            f'/home/ubuntu/{SAVED_ARTIFACT} --recursive'
         )   
     )
     move_model_to_hdfs = BashOperator(
