@@ -2,7 +2,6 @@ APP_NAME = 'Model Automated Retraining and Validation'
 
 import logging
 import argparse
-import mlflow
 import pandas as pd
 import numpy as np
 from scipy.stats import norm, ttest_ind
@@ -11,6 +10,7 @@ from pyspark.sql import SparkSession
 from pyspark.sql import functions as F
 from pyspark.sql.types import DoubleType
 from pyspark.ml import Pipeline
+from pyspark.ml.pipeline import PipelineModel
 from pyspark.ml.classification import GBTClassifier
 
 from custom_transformers import (
@@ -89,8 +89,8 @@ def main(args):
     train, valid = train_validation_split(data)
 
     logger.info('Loading saved model ...')
-    saved_model_path = args.saved_artifact
-    loaded_model = mlflow.spark.load_model(saved_model_path)
+    saved_model_path = args.saved_artifact    
+    loaded_model = PipelineModel.load(saved_model_path)    
 
     logger.info('Scoring saved model ...') 
     predictions_A = loaded_model.transform(valid)
