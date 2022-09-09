@@ -50,17 +50,17 @@ def main():
     args = argparser.parse_args()
 
     producer = kafka.KafkaProducer(
-        bootstrap_servers=[args.bootstrap_server],
+        bootstrap_servers=[args.bootstrap_server],        
+        security_protocol='SASL_SSL',
+        sasl_mechanism='SCRAM-SHA-512',
+        sasl_plain_username='user_1',
+        sasl_plain_password='Moscow117279',
+        ssl_cafile='/usr/local/share/ca-certificates/Yandex/YandexCA.crt',
         value_serializer=serialize,
-    )
-    APP_NAME = 'Generate test data'
-    spark = SparkSession.builder.appName(APP_NAME).getOrCreate()    
-    data = spark.read.parquet(
-        args.data_artifact, header=True, inferSchema=True
-    )
+    )    
     try:
         for i in range(args.n):
-            record_md = send_message(data, producer, args.topic)
+            record_md = send_message(args.data_artifact, producer, args.topic)
             print(
                 f'Msg sent. Topic: {record_md.topic}, partition:{record_md.partition}, offset:{record_md.offset}'
             )
@@ -70,8 +70,8 @@ def main():
     producer.close()
 
 
-def send_message(data, producer: kafka.KafkaProducer, topic: str) -> RecordMetadata:
-    generated_data = generate_data(data)
+def send_message(data_artifact_path: str, producer: kafka.KafkaProducer, topic: str) -> RecordMetadata:
+    generated_data = generate_data(data_artifact_path)
     features = producer.send(
         topic=topic,
         key=str(generated_data['card_id']).encode('ascii'),
@@ -86,9 +86,14 @@ def send_message(data, producer: kafka.KafkaProducer, topic: str) -> RecordMetad
     )
 
 
-def generate_data(data) -> Dict:
-    df = data.sample(0.00003).toPandas()
-    card_id = df.loc[0, 'card1']
+def generate_data(data_artifact_path) -> Dict:
+    APP_NAME = 'Generate test data'
+    spark = SparkSession.builder.appName(APP_NAME).getOrCreate()    
+    data = spark.read.parquet(
+        data_artifact_path, header=True, inferSchema=True
+    )
+    df = data.sample(0.0001).toPandas()
+    card_id = int(df.loc[0, 'card1'])
     card_data = df.iloc[:1, :].to_json()
     return {
         'ts': datetime.datetime.now().isoformat(),        
