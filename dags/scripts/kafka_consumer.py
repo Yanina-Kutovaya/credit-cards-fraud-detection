@@ -14,6 +14,7 @@ from custom_transformers import (
     StringFromDiscrete
 )
 import pyspark.sql.functions as F
+from pyspark.sql import SparkSession
 from pyspark.sql.types import DoubleType
 from pyspark.ml.pipeline import PipelineModel
 
@@ -23,8 +24,7 @@ def main():
     argparser.add_argument(
         '-g', 
         '--group_id',
-        default='group_1',
-        required=True,
+        default='group_1',        
         help='kafka consumer group_id'
     )
     argparser.add_argument(
@@ -47,17 +47,22 @@ def main():
     consumer = KafkaConsumer(
         bootstrap_servers=[args.bootstrap_server],
         group_id=args.group_id,
+        security_protocol="SASL_SSL",
+        sasl_mechanism="SCRAM-SHA-512",
+        sasl_plain_username='user_2',
+        sasl_plain_password='Volgograd38',        
+        ssl_cafile="/usr/local/share/ca-certificates/Yandex/YandexCA.crt",
         value_deserializer=json.loads,
     )
     consumer.subscribe(topics=[args.topic])
 
-    make_predictions(consumer)
+    make_predictions(consumer, args.inference_artifact)
+    
 
-
-def make_predictions(consumer):
+def make_predictions(consumer, inference_artifact_path):
     APP_NAME = 'Inference'
     spark = SparkSession.builder.appName(APP_NAME).getOrCreate()          
-    model = PipelineModel.load(args.inference_artifact)
+    model = PipelineModel.load(inference_artifact_path)
     results = []
 
     def extract_prob(v):
@@ -76,7 +81,8 @@ def make_predictions(consumer):
             print(
                 f'{msg.topic}:{msg.partition}:{msg.offset}: key={msg.key}'
             )
-            df = spark.createDataFrame(pd.read_json(msg.value)) 
+            df = pd.read_json(msg.value)
+            df = spark.createDataFrame(df) 
             predictions = model.transform(df).select(cols)
             predictions = (
                 predictions
