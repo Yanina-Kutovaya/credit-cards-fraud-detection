@@ -125,7 +125,7 @@ def make_predictions(consumer, producer, inference_artifact_path, topic_2):
     except KeyboardInterrupt:
         pass
 
-    print(f'/nTotal {count_1} transactions received and {count_2} predictions sent')
+    print(f'\nTotal {count_1} transactions received and {count_2} predictions sent')
 
 
 class RecordMetadata(NamedTuple):
