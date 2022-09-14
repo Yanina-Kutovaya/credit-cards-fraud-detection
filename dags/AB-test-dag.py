@@ -77,8 +77,8 @@ with DAG(
         ),         
     )
     
-    copy_data_from_s3 >> move_data_to_hdfs >> train_model
-    copy_model_from_s3 >> move_model_to_hdfs >> train_model
+    copy_data_from_s3 >> move_data_to_hdfs >> AB_test
+    copy_model_from_s3 >> move_model_to_hdfs >> AB_test
     [
         copy_script_from_s3, 
         copy_custom_transformers_from_s3,
