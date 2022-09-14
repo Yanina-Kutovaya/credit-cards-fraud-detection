@@ -66,8 +66,8 @@ with DAG(
             f'/home/ubuntu/ '
         )   
     )    
-    train_model = BashOperator(
-        task_id='train_model',
+    AB_test = BashOperator(
+        task_id='AB_test',
         bash_command=(
             'spark-submit '
             '/home/ubuntu/AB_test.py '            
@@ -83,4 +83,4 @@ with DAG(
         copy_script_from_s3, 
         copy_custom_transformers_from_s3,
         copy_fraud_detection_pipeline_from_s3
-    ] >> train_model
+    ] >> AB_test
